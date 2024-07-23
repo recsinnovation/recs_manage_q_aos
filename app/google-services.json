@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "252431157414",
+    "project_id": "sunq-b28b2",
+    "storage_bucket": "sunq-b28b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252431157414:android:614f82f7a87340f10fcc67",
+        "android_client_info": {
+          "package_name": "com.recs.sunq.androidapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx0SSudJ0HGhQN-yC1o-Ig8h0vup2iIvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252431157414:android:2a4bf69730863f1d0fcc67",
+        "android_client_info": {
+          "package_name": "com.recs.sunq.inspection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx0SSudJ0HGhQN-yC1o-Ig8h0vup2iIvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

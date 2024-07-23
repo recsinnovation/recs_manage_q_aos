@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:key="pref_key_push_notifications"
+        android:title="@string/push_notifications"
+        android:icon="@drawable/alarm"
+        android:summaryOn="@string/push_notifications_summary_on"
+        android:summaryOff="@string/push_notifications_summary_off"
+        android:defaultValue="true" />
+
+    <Preference
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
+
+    <Preference
+        android:key="pref_key_logout"
+        android:icon="@drawable/logout"
+        android:title="@string/logout"
+        android:summary="@string/logout_summary" />
+
+    <Preference
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
+
+</PreferenceScreen>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.recs.sunq.inspection.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+    <argument
+        android:name="url"
+        app:argType="string"
+        android:defaultValue="https://192.168.0.28:5173/device-management/inspection/history" />
+
+    <fragment
+        android:id="@+id/nav_alarmList"
+        android:name="com.recs.sunq.inspection.optionsMenu.AlarmFragment"
+        android:label="AlarmFragment"
+        tools:layout="@layout/fragment_alarm">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.recs.sunq.inspection.optionsMenu.SettingsFragment"
+        android:label="@string/action_settings"
+        tools:layout="@xml/preferences" />
+
+</navigation>

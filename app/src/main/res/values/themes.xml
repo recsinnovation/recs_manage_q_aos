@@ -1,0 +1,60 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 메인화면 style -->
+    <style name="Theme.Inspection" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/title_bar</item>
+    </style>
+
+    <style name="Theme.Inspection.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/title_bar</item>
+    </style>
+
+    <!-- 로그인 화면 style -->
+    <style name="Theme.Inspection.FullScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item> <!-- 변경 -->
+        <item name="colorPrimaryVariant">@color/white</item> <!-- 변경 -->
+        <item name="colorSecondary">@color/white</item> <!-- 변경 -->
+        <item name="colorSecondaryVariant">@color/white</item> <!-- 변경 -->
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/title_bar</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item> <!-- 변경 -->
+    </style>
+
+    <!-- 스플래쉬 화면 style -->
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+    </style>
+
+    <style name="Theme.Inspection.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Inspection.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PreferenceScreenTheme" parent="PreferenceThemeOverlay">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:iconTint">@android:color/white</item>
+    </style>
+
+        <!-- 다이얼로그 테마 정의 -->
+        <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+            <item name="colorPrimary">@color/white</item> <!-- 다이얼로그 내부의 기본 색상 -->
+            <item name="colorOnPrimary">@color/black</item> <!-- 다이얼로그 텍스트 색상 -->
+            <item name="colorPrimaryVariant">@color/black</item> <!-- 다른 색상 변형 -->
+            <item name="colorSecondary">@color/black</item> <!-- 두 번째 색상 -->
+            <item name="colorOnSecondary">@color/black</item> <!-- 두 번째 텍스트 색상 -->
+        </style>
+
+</resources>
