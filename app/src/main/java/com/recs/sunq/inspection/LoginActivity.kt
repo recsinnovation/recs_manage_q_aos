@@ -65,7 +65,19 @@ class LoginActivity : AppCompatActivity() {
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            handlePermissionsResult(permissions)
+            permissions.entries.forEach {
+                Log.d("LoginActivity", "${it.key} 권한 ${if (it.value) "승인됨" else "거부됨"}")
+                when (it.key) {
+                    Manifest.permission.POST_NOTIFICATIONS -> updatePermissionPreference("notificationPermission", it.value)
+                    Manifest.permission.CAMERA -> updatePermissionPreference("cameraPermission", it.value)
+                    Manifest.permission.READ_MEDIA_IMAGES -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        updatePermissionPreference("storagePermission", it.value)
+                    }
+                    Manifest.permission.READ_EXTERNAL_STORAGE -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                        updatePermissionPreference("storagePermission", it.value)
+                    }
+                }
+            }
         }
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(applicationContext))
@@ -97,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-            if (rememberId?.isChecked == true) {
+            if (rememberId?.isChecked == true) { // Safe call with null check
                 saveLoginPreferences(username.text.toString(), rememberPw?.isChecked == true)
             } else {
                 clearLoginPreferences()
@@ -175,44 +187,8 @@ class LoginActivity : AppCompatActivity() {
         if (permissionsToRequest.isNotEmpty()) {
             requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
         } else {
-            Log.d("LoginActivity", "모든 권한이 승인됨")
+            Log.d("LoginActivity", "모든 권한이 이미 승인됨")
         }
-    }
-
-    private fun handlePermissionsResult(permissions: Map<String, Boolean>) {
-        var showDialog = false
-        var message = ""
-
-        permissions.forEach { (permission, isGranted) ->
-            if (!isGranted) {
-                showDialog = true
-                when (permission) {
-                    Manifest.permission.CAMERA -> message = "카메라 권한이 필요합니다."
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_EXTERNAL_STORAGE -> message = "갤러리 권한이 필요합니다."
-                }
-            }
-        }
-
-        if (showDialog) {
-            showPermissionsDeniedDialog(message)
-        }
-    }
-
-    private fun showPermissionsDeniedDialog(message: String) {
-        val dialog = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
-            .setTitle("권한 필요")
-            .setMessage("$message 앱 설정에서 권한을 활성화해 주세요.")
-            .setPositiveButton("설정") { _, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.parse("package:${packageName}")
-                }
-                startActivity(intent)
-            }
-            .setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
-            .create()
-
-        dialog.show()
     }
 
     private fun observeLoginFormState() {
