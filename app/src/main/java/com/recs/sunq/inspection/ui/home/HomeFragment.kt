@@ -73,7 +73,7 @@ class HomeFragment : Fragment(), UrlHandler {
             binding.webView.reload()
         }
 
-        val url = arguments?.getString("url") ?: "https://192.168.0.28:5173/device-management/inspection/history"
+        val url = arguments?.getString("url") ?: "https://m.sunq.co.kr/device-management/inspection/history"
         setupWebView(url)
     }
 
@@ -129,10 +129,6 @@ class HomeFragment : Fragment(), UrlHandler {
                         println("Injected session data.")
                     }
                     swipeRefreshLayout.isRefreshing = false
-                }
-
-                override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                    handler?.proceed() // SSL 인증 오류 무시하고 계속 진행
                 }
             }
             loadUrl(url)
@@ -216,14 +212,13 @@ class HomeFragment : Fragment(), UrlHandler {
                 val result: Array<Uri>? = data?.clipData?.let { clipData ->
                     val uriList = mutableListOf<Uri>()
                     for (i in 0 until clipData.itemCount) {
+                        if (uriList.size >= 10) {
+                            Toast.makeText(requireContext(), "최대 10장까지 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                            break
+                        }
                         uriList.add(clipData.getItemAt(i).uri)
                     }
-                    if (uriList.size > 10) {
-                        Toast.makeText(requireContext(), "최대 10장까지 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
-                        null
-                    } else {
-                        uriList.toTypedArray()
-                    }
+                    uriList.toTypedArray()
                 } ?: data?.data?.let { arrayOf(it) } ?: cameraImageUri?.let { arrayOf(it) }
 
                 // URI 데이터를 로그로 출력

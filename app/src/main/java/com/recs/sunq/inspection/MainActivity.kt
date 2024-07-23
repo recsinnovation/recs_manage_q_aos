@@ -51,12 +51,12 @@ class MainActivity : AppCompatActivity() {
         drawerLayout: DrawerLayout
     ) {
         navView.findViewById<TextView>(R.id.nav_main_screen).setOnClickListener {
-            updateUrl("https://192.168.0.28:5173/device-management/inspection/history")
+            updateUrl("https://m.sunq.co.kr/device-management/inspection/history")
             drawerLayout.closeDrawers()
         }
 
         navView.findViewById<TextView>(R.id.nav_power_system).setOnClickListener {
-            updateUrl("https://192.168.0.28:5173/device-management/inspection/regist")
+            updateUrl("https://m.sunq.co.kr/device-management/inspection/regist")
             drawerLayout.closeDrawers()
         }
     }
