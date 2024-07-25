@@ -127,8 +127,9 @@ class AppMessagingService : FirebaseMessagingService() {
         val isPushEnabled = if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "Y" else "N"
         val os = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) "AOS" else "IOS"
         val appVer = BuildConfig.VERSION_NAME
+        val appName = "inspection"
 
-        val registrationInfo = UserRegistrationInfo(userSeq, isPushEnabled, os, appVer, deviceToken)
+        val registrationInfo = UserRegistrationInfo(userSeq, isPushEnabled, os, appVer, deviceToken, appName)
 
         val apiService = RetrofitInstance.createApi(context)
 
@@ -161,8 +162,9 @@ class AppMessagingService : FirebaseMessagingService() {
         val isPushEnabled = if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "Y" else "N"
         val os = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) "AOS" else "IOS"
         val appVer = BuildConfig.VERSION_NAME
+         val appName = "inspection"
 
-        val updateUserInfo = UpdateUserInfo(userSeq, isPushEnabled, os, appVer, deviceToken)
+        val updateUserInfo = UpdateUserInfo(userSeq, isPushEnabled, os, appVer, deviceToken, appName)
 
         val apiService = RetrofitInstance.createApi(context)
 
@@ -176,7 +178,6 @@ class AppMessagingService : FirebaseMessagingService() {
                         Log.d("FCM", "서버에 등록 실패: ${response.errorBody()?.string()}")
                     }
                 }
-
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     Log.d("FCM", "서버 통신 실패: ${t.message}")
                 }
@@ -190,8 +191,9 @@ class AppMessagingService : FirebaseMessagingService() {
         val tokenManager = TokenManager(context)
         val userSeq = tokenManager.getUserseq() ?: ""
         val apiService = RetrofitInstance.createApi(context)
+        val appName = "inspection"
 
-        apiService.selectUserInfo(userSeq).enqueue(object : Callback<UserInfo> {
+        apiService.selectUserInfo(userSeq, appName).enqueue(object : Callback<UserInfo> {
             override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>) {
                 if (response.isSuccessful) {
                     val userInfo = response.body()
@@ -199,6 +201,13 @@ class AppMessagingService : FirebaseMessagingService() {
                     if (userInfo == null) {
                         return
                     }
+
+                    // plant_list를 TokenManager에 저장
+                    val plantList = userInfo.plant_list
+                    if (plantList != null) {
+                        tokenManager.savePlantList(plantList)
+                    }
+
                     val isAppVersion = userInfo.is_app_version
                     Log.d("FCM", "is_app_version: $isAppVersion")
                     if (context is MainActivity) {

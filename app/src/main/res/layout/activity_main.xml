@@ -91,6 +91,21 @@
                         android:background="@android:color/white"
                         android:alpha="0.1"/>
 
+                    <ExpandableListView
+                        android:id="@+id/plant_name_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:groupIndicator="@android:color/transparent"
+                        android:scrollbars="none"
+                        android:fadingEdge="none"
+                        android:overScrollMode="never" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/white"
+                        android:alpha="0.1"/>
+
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>

@@ -33,7 +33,7 @@ interface LoginService {
     fun updateUserInfo(@Body UpdateUserInfo: UpdateUserInfo): Call<Void>
 
     @GET("userApp/selectAppUser")
-    fun selectUserInfo(@Query("user_seq") userSeq: String): Call<UserInfo>
+    fun selectUserInfo(@Query("user_seq") userSeq: String, @Query("app_name") appName: String): Call<UserInfo>
 
     @GET("userAppAlarm/userAllAlarm")
     fun selectAlertList(@Query("user_seq") userSeq: String): Call<List<Alarm>>

@@ -1,5 +1,6 @@
 package com.recs.sunq.inspection
 
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ExpandableListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,13 +20,24 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.recs.sunq.inspection.Notification.AppMessagingService
 import com.recs.sunq.inspection.databinding.ActivityMainBinding
 import com.recs.sunq.inspection.ui.home.HomeFragment
+import com.recs.sunq.inspection.ExpandableListAdapter
+import com.recs.sunq.inspection.data.TokenManager
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var expandableListViewPlantList: ExpandableListView
+
+    private lateinit var listDataHeaderPlantList: ArrayList<String>
+    private lateinit var listDataChildPlantList: HashMap<String, List<String>>
+    private lateinit var listAdapterPlantList: ExpandableListAdapter
+
+    private val plantUrlMap: MutableMap<String, String> = HashMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +46,47 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
+        expandableListViewPlantList = navView.findViewById(R.id.plant_name_list)
+
+        setupExpandableListViews()
+
+        listAdapterPlantList = ExpandableListAdapter(this, listDataHeaderPlantList, listDataChildPlantList)
+        expandableListViewPlantList.setAdapter(listAdapterPlantList)
+
+        expandableListViewPlantList.setOnGroupExpandListener { groupPosition ->
+            Log.d("ExpandableListView", "Generation group $groupPosition expanded")
+            collapseAllExcept(expandableListViewPlantList, groupPosition)
+            setExpandableListViewHeight(expandableListViewPlantList, listAdapterPlantList)
+            listAdapterPlantList.setSelectedPosition(groupPosition, true, expandableListViewPlantList)
+        }
+
+        expandableListViewPlantList.setOnGroupCollapseListener { groupPosition ->
+            Log.d("ExpandableListView", "Generation group $groupPosition collapsed")
+            setExpandableListViewHeight(expandableListViewPlantList, listAdapterPlantList)
+            listAdapterPlantList.setSelectedPosition(groupPosition, false, expandableListViewPlantList)
+        }
+
+        expandableListViewPlantList.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
+            val selectedItem = listAdapterPlantList.getChild(groupPosition, childPosition) as String
+            val tokenManager = TokenManager(this)
+
+            // TokenManager에서 plant_seq와 plant_name 업데이트
+            val selectedPlant = tokenManager.getPlantList()?.find { it.plant_name == selectedItem }
+            var url = "https://m.sunq.co.kr/device-management/inspection/history"
+            if (selectedPlant != null) {
+                tokenManager.updatePlantSeqAndName(selectedPlant.plant_seq, selectedPlant.plant_name)
+            }
+
+            val textView: TextView = findViewById(R.id.plantlist)
+            textView.text = selectedItem
+
+            updateUrl(url)
+            drawerLayout.closeDrawers()
+            false
+        }
+
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -44,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         setupNavigationListeners(navView, drawerLayout)
+
+        val appMessagingService = AppMessagingService()
+        appMessagingService.selectUserInfo(this)
     }
 
     private fun setupNavigationListeners(
@@ -78,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     fun showUpdateDialog(isAppVersion: Boolean) {
         Log.d("FCM", "showUpdateDialog called with isAppVersion: $isAppVersion")
         if (!isAppVersion) {
-            val builder = AlertDialog.Builder(this) // Activity의 Context 전달
+            val builder = AlertDialog.Builder(this)
             builder.setTitle("업데이트 필요")
             builder.setMessage("앱 버전이 최신이 아닙니다. 업데이트가 필요합니다.")
             builder.setPositiveButton("업데이트") { _, _ ->
@@ -143,5 +199,89 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun collapseAllExcept(exceptListView: ExpandableListView, groupPosition: Int) {
+        val listViews = listOf(expandableListViewPlantList)
+        for (listView in listViews) {
+            if (listView != exceptListView) {
+                val adapter = listView.expandableListAdapter
+                val groupCount = adapter.groupCount
+                for (i in 0 until groupCount) {
+                    if (listView.isGroupExpanded(i)) {
+                        listView.collapseGroup(i)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setExpandableListViewHeight(
+        listView: ExpandableListView,
+        adapter: ExpandableListAdapter
+    ) {
+        val listAdapter = listView.expandableListAdapter ?: return
+
+        var totalHeight = 0
+        for (i in 0 until adapter.groupCount) {
+            val groupItem = adapter.getGroupView(i, false, null, listView)
+            groupItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            totalHeight += groupItem.measuredHeight
+
+            if (listView.isGroupExpanded(i)) {
+                for (j in 0 until adapter.getChildrenCount(i)) {
+                    val listItem = adapter.getChildView(i, j, false, null, listView)
+                    listItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+                    totalHeight += listItem.measuredHeight
+
+                    listItem.layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                }
+            }
+        }
+
+        val params = listView.layoutParams
+        val oldHeight = params.height
+        params.height = totalHeight + (listView.dividerHeight * (adapter.groupCount - 1))
+        listView.layoutParams = params
+        listView.requestLayout()
+
+        val animator = ValueAnimator.ofInt(oldHeight, params.height)
+        animator.addUpdateListener { animation ->
+            listView.layoutParams.height = animation.animatedValue as Int
+            listView.requestLayout()
+        }
+        animator.duration = 250
+        animator.start()
+    }
+
+    private fun prepareListData() {
+        listDataHeaderPlantList = ArrayList()
+        listDataChildPlantList = HashMap()
+
+        listDataHeaderPlantList.add("발전소 리스트")
+        val plantList: MutableList<String> = ArrayList()
+
+        // TokenManager에서 발전소 리스트 가져오기
+        val tokenManager = TokenManager(this)
+        val savedPlantList = tokenManager.getPlantList()
+
+        savedPlantList?.forEach { plant ->
+            plantList.add(plant.plant_name)
+        }
+
+        listDataChildPlantList[listDataHeaderPlantList[0]] = plantList
+    }
+
+    private fun setupExpandableListViews() {
+        prepareListData()
+
+        val generationListAdapter =
+            ExpandableListAdapter(this, listDataHeaderPlantList, listDataChildPlantList)
+        val generationExpandableListView =
+            findViewById<ExpandableListView>(R.id.plant_name_list)
+        generationExpandableListView.setAdapter(generationListAdapter)
     }
 }

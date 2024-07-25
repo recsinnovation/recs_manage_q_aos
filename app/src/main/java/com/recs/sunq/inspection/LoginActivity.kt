@@ -206,6 +206,7 @@ class LoginActivity : AppCompatActivity() {
                         checkPermissions()
                         tokenManager.saveToken(it.token, it.user_seq, it.plant_info.plant_seq, it.plant_info.plant_name, it.user_id)
                     }
+
                 }
                 is Result.Error -> {
                     showLoginFailedDialog()

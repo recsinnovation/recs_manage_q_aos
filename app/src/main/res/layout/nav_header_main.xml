@@ -14,4 +14,19 @@
         android:src="@drawable/logo"
         android:layout_gravity="start|center_vertical" />
 
+    <!-- View를 추가하여 공간을 차지하게 함 -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/plantlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_semibold"
+        android:text="파주 태양광 발전소"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:gravity="end"/>
 </LinearLayout>

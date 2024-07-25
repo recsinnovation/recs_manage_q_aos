@@ -8,10 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     fun createApi(context: Context): LoginService {
-        val client = createOkHttpClientWithPemCertificate(context)
+        val client = createSecureOkHttpClient(context)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://192.168.0.67:8480/api/")
+            .baseUrl("https://api.sunq.co.kr/api/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())

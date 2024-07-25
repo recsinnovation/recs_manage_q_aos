@@ -5,11 +5,15 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.recs.sunq.inspection.data.model.Plant_list
 import org.json.JSONObject
 
 class TokenManager(context: Context) {
     private var sharedPreferences: SharedPreferences
     private var editor: SharedPreferences.Editor
+    private val gson = Gson()
 
     init {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
@@ -29,16 +33,32 @@ class TokenManager(context: Context) {
         private const val PLANT_SEQ = "plant_seq"
         private const val PLANT_NAME = "plant_name"
         private const val USER_ID = "user_id"
+        private const val PLANT_LIST = "plant_list"
     }
 
     fun saveToken(token: String, userSeq: String, plantSeq: String, plantName: String, userId: String) {
-
         editor.putString(TOKEN_KEY, token)
         editor.putString(USER_SEQ, userSeq)
         editor.putString(PLANT_SEQ, plantSeq)
         editor.putString(PLANT_NAME, plantName)
         editor.putString(USER_ID, userId)
         editor.apply()
+    }
+
+    fun savePlantList(plantList: List<Plant_list>) {
+        val plantListJson = gson.toJson(plantList)
+        editor.putString(PLANT_LIST, plantListJson)
+        editor.apply()
+    }
+
+    fun getPlantList(): List<Plant_list>? {
+        val plantListJson = sharedPreferences.getString(PLANT_LIST, null)
+        return if (plantListJson != null) {
+            val type = object : TypeToken<List<Plant_list>>() {}.type
+            gson.fromJson(plantListJson, type)
+        } else {
+            null
+        }
     }
 
     fun getUserInfo(): String? {
@@ -64,5 +84,12 @@ class TokenManager(context: Context) {
     fun clearToken() {
         editor.remove(TOKEN_KEY).apply()
         // SessionManager.userInfo = null
+    }
+
+    // 새로운 plant_seq 업데이트 메서드 추가
+    fun updatePlantSeqAndName(plantSeq: String, plantName: String) {
+        editor.putString(PLANT_SEQ, plantSeq)
+        editor.putString(PLANT_NAME, plantName)
+        editor.apply()
     }
 }

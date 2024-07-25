@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.recs.sunq.androidapp.data.LoginRepository
 import com.recs.sunq.androidapp.data.Result
+import com.recs.sunq.inspection.Notification.AppMessagingService
 import com.recs.sunq.inspection.data.TokenManager
 import com.recs.sunq.inspection.data.model.LoginData
 import com.recs.sunq.inspection.data.model.LoginResponse
@@ -38,6 +39,7 @@ class LoginViewModel(private val loginRepository: LoginRepository, private val c
                         val userId = user.data.user_id
                         val plantSeq = user.data.plant_info.plant_seq
                         val plantName = user.data.plant_info.plant_name
+
                         if (token != null && userSeq != null && plantSeq != null && userId != null) {
                             try {
                                 tokenManager.saveToken(token, userSeq, plantSeq, plantName, userId)
@@ -45,8 +47,10 @@ class LoginViewModel(private val loginRepository: LoginRepository, private val c
                                     "LoginViewModel",
                                     "토큰 및 사용자 정보 저장 완료: $token, $userSeq, $plantSeq"
                                 )
+                                val appMessagingService = AppMessagingService()
+                                appMessagingService.sendRegistrationToServer(context)
                                 Log.d("LoginViewModel", "서버에 등록 정보 전송 및 사용자 정보 선택 완료")
-
+                                appMessagingService.selectUserInfo(context)
                                 _navigateToMain.postValue(true)
                             } catch (e: Exception) {
                                 Log.e("LoginViewModel", "토큰 및 사용자 정보 저장 실패", e)
@@ -55,7 +59,7 @@ class LoginViewModel(private val loginRepository: LoginRepository, private val c
                     }
 
                     is Result.Error -> _loginResult.postValue(result)
-                    is Result.Loading -> {}
+                    Result.Loading -> {} // 이미 처리된 상태이므로 아무 작업도 하지 않음
                 }
             } catch (e: Exception) {
                 _loginResult.postValue(Result.Error(e))

@@ -28,6 +28,11 @@ data class PlantInfo(
     val plant_name: String
 )
 
+data class Plant_list(
+    val plant_name: String,
+    val plant_seq: String
+)
+
 data class LogoutResponse(
     val result: Int,
     val message: String?,
@@ -39,14 +44,17 @@ data class UserRegistrationInfo(
     @SerializedName("is_push") val isPushEnabled: String,
     @SerializedName("os") val os: String,
     @SerializedName("app_ver") val appVer: String,
-    @SerializedName("device_token") val devicetoken: String
+    @SerializedName("device_token") val devicetoken: String,
+    @SerializedName("app_name")val appName: String
 )
+
 data class UpdateUserInfo(
     @SerializedName("user_seq") val userSeq: String,
     @SerializedName("is_push") val isPushEnabled: String,
     @SerializedName("os") val os: String,
     @SerializedName("app_ver") val appVer: String,
-    @SerializedName("device_token") val devicetoken: String
+    @SerializedName("device_token") val devicetoken: String,
+    @SerializedName("app_name")val appName: String
 )
 
 data class UserInfo(
@@ -56,7 +64,9 @@ data class UserInfo(
     var os : String,
     var is_push : String,
     var latest_app_ver : String,
-    var is_app_version : Boolean
+    var is_app_version : Boolean,
+    val plant_list: List<Plant_list>?,
+    val plant_seq: String
 )
 
 data class Alarm(
