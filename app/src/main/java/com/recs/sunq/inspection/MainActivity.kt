@@ -37,8 +37,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listDataChildPlantList: HashMap<String, List<String>>
     private lateinit var listAdapterPlantList: ExpandableListAdapter
 
-    private val plantUrlMap: MutableMap<String, String> = HashMap()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
