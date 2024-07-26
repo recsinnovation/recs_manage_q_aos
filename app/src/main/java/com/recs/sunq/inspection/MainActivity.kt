@@ -2,7 +2,10 @@ package com.recs.sunq.inspection
 
 import android.animation.ValueAnimator
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -132,31 +136,39 @@ class MainActivity : AppCompatActivity() {
     fun showUpdateDialog(isAppVersion: Boolean) {
         Log.d("FCM", "showUpdateDialog called with isAppVersion: $isAppVersion")
         if (!isAppVersion) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("업데이트 필요")
-            builder.setMessage("앱 버전이 최신이 아닙니다. 업데이트가 필요합니다.")
-            builder.setPositiveButton("업데이트") { _, _ ->
+            // 커스텀 다이얼로그 레이아웃을 인플레이트
+            val dialogView = layoutInflater.inflate(R.layout.custom_update_dialog, null)
+
+            // 다이얼로그 생성 및 설정
+            val dialog = Dialog(this)
+            dialog.setContentView(dialogView)
+            dialog.setCancelable(false)
+
+            // 레이아웃의 뷰 요소 찾기
+            val updateButton = dialogView.findViewById<AppCompatButton>(R.id.update_button)
+            val cancelButton = dialogView.findViewById<AppCompatButton>(R.id.cancel_button)
+
+            // 업데이트 버튼 클릭 리스너 설정
+            updateButton.setOnClickListener {
                 val appPackageName = this.packageName
                 try {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("market://details?id=$appPackageName")
-                        )
-                    )
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
                 } catch (e: android.content.ActivityNotFoundException) {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
-                        )
-                    )
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
                 }
-            }
-            builder.setNegativeButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }
-            builder.show()
+
+            // 취소 버튼 클릭 리스너 설정
+            cancelButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            // 다이얼로그 배경을 투명하게 설정
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            // 다이얼로그 표시
+            dialog.show()
         }
     }
 

@@ -5,9 +5,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.Manifest
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
@@ -28,6 +31,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.ContextCompat
@@ -150,21 +154,39 @@ class HomeFragment : Fragment(), UrlHandler {
     }
 
     private fun showPermissionRationaleDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("권한 요청")
-            .setMessage("파일찾기 기능을 사용하기 위해 카메라 및 저장소 권한이 필요합니다. 설정에서 권한을 허용해 주세요.")
-            .setPositiveButton("설정으로 가기") { _, _ ->
-                // 설정 화면으로 이동
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }
-            .setNegativeButton("취소") { dialog, _ ->
-                dialog.dismiss()
-                Toast.makeText(requireContext(), "파일찾기 권한이 거부되었습니다 앱 설정에서 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
-            }
-            .show()
+        // 커스텀 다이얼로그 레이아웃을 인플레이트
+        val dialogView = layoutInflater.inflate(R.layout.custom_permission_dialog, null)
+
+        // 다이얼로그 생성 및 설정
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(dialogView)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // 레이아웃의 뷰 요소 찾기
+        val updateButton = dialogView.findViewById<AppCompatButton>(R.id.update_button)
+        val cancelButton = dialogView.findViewById<AppCompatButton>(R.id.cancel_button)
+
+        // 설정으로 가기 버튼 클릭 리스너 설정
+        updateButton.setOnClickListener {
+            // 설정 화면으로 이동
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+            intent.data = uri
+            startActivity(intent)
+            dialog.dismiss()
+        }
+
+        // 거부 버튼 클릭 리스너 설정
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+            Toast.makeText(requireContext(), "파일찾기 권한이 거부되었습니다. 앱 설정에서 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // 다이얼로그 표시
+        dialog.show()
     }
 
     fun openImageChooser() {
