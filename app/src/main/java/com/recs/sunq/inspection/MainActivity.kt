@@ -117,6 +117,16 @@ class MainActivity : AppCompatActivity() {
             updateUrl("https://m.sunq.co.kr/device-management/inspection/regist")
             drawerLayout.closeDrawers()
         }
+
+        navView.findViewById<TextView>(R.id.nav_problemhistory).setOnClickListener {
+            updateUrl("https://m.sunq.co.kr/device-management/error-fix/history")
+            drawerLayout.closeDrawers()
+        }
+
+        navView.findViewById<TextView>(R.id.nav_problemhistory_reg).setOnClickListener {
+            updateUrl("https://m.sunq.co.kr/device-management/error-fix/regist")
+            drawerLayout.closeDrawers()
+        }
     }
 
     fun updateUrl(newUrl: String) {
@@ -144,6 +154,12 @@ class MainActivity : AppCompatActivity() {
             dialog.setContentView(dialogView)
             dialog.setCancelable(false)
 
+            // 다이얼로그 배경을 투명하게 설정
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            // 다이얼로그 애니메이션 설정
+            dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+
             // 레이아웃의 뷰 요소 찾기
             val updateButton = dialogView.findViewById<AppCompatButton>(R.id.update_button)
             val cancelButton = dialogView.findViewById<AppCompatButton>(R.id.cancel_button)
@@ -163,9 +179,6 @@ class MainActivity : AppCompatActivity() {
             cancelButton.setOnClickListener {
                 dialog.dismiss()
             }
-
-            // 다이얼로그 배경을 투명하게 설정
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             // 다이얼로그 표시
             dialog.show()

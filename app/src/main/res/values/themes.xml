@@ -40,7 +40,10 @@
 
     <style name="Theme.Inspection.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.Inspection.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Inspection.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">?attr/actionBarSize</item>
+    </style>
 
     <style name="PreferenceScreenTheme" parent="PreferenceThemeOverlay">
         <item name="android:textColorPrimary">@android:color/white</item>
@@ -56,5 +59,10 @@
             <item name="colorSecondary">@color/black</item> <!-- 두 번째 색상 -->
             <item name="colorOnSecondary">@color/black</item> <!-- 두 번째 텍스트 색상 -->
         </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
 
 </resources>

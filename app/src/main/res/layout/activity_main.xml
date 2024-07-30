@@ -91,6 +91,42 @@
                         android:background="@android:color/white"
                         android:alpha="0.1"/>
 
+                    <TextView
+                        android:id="@+id/nav_problemhistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:padding="15dp"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:textColor="@color/white"
+                        android:text="문제조치 이력" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/white"
+                        android:alpha="0.1"/>
+
+                    <TextView
+                        android:id="@+id/nav_problemhistory_reg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:padding="15dp"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:textColor="@color/white"
+                        android:text="문제조치 등록" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/white"
+                        android:alpha="0.1"/>
+
                     <ExpandableListView
                         android:id="@+id/plant_name_list"
                         android:layout_width="match_parent"

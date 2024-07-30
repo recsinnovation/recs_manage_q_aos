@@ -161,7 +161,12 @@ class HomeFragment : Fragment(), UrlHandler {
         val dialog = Dialog(requireContext())
         dialog.setContentView(dialogView)
         dialog.setCancelable(false)
+
+        // 다이얼로그 배경을 투명하게 설정
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // 다이얼로그 애니메이션 설정
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
 
         // 레이아웃의 뷰 요소 찾기
         val updateButton = dialogView.findViewById<AppCompatButton>(R.id.update_button)
@@ -176,14 +181,11 @@ class HomeFragment : Fragment(), UrlHandler {
             startActivity(intent)
             dialog.dismiss()
         }
-
         // 거부 버튼 클릭 리스너 설정
         cancelButton.setOnClickListener {
             dialog.dismiss()
             Toast.makeText(requireContext(), "파일찾기 권한이 거부되었습니다. 앱 설정에서 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show()
         }
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         // 다이얼로그 표시
         dialog.show()
