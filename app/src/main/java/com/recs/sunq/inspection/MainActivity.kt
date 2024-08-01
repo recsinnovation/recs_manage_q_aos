@@ -52,6 +52,11 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         expandableListViewPlantList = navView.findViewById(R.id.plant_name_list)
 
+        listDataHeaderPlantList = ArrayList()
+        listDataChildPlantList = HashMap()
+
+        prepareListData()
+
         setupExpandableListViews()
 
         listAdapterPlantList = ExpandableListAdapter(this, listDataHeaderPlantList, listDataChildPlantList)
@@ -280,10 +285,12 @@ class MainActivity : AppCompatActivity() {
         animator.start()
     }
 
-    private fun prepareListData() {
-        listDataHeaderPlantList = ArrayList()
-        listDataChildPlantList = HashMap()
+    fun prepareListData() {
+        // Clear existing data
+        listDataHeaderPlantList.clear()
+        listDataChildPlantList.clear()
 
+        // Add header
         listDataHeaderPlantList.add("발전소 리스트")
         val plantList: MutableList<String> = ArrayList()
 
@@ -296,6 +303,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         listDataChildPlantList[listDataHeaderPlantList[0]] = plantList
+
+        // 어댑터에 데이터 설정 후 UI 업데이트
+        listAdapterPlantList = ExpandableListAdapter(this, listDataHeaderPlantList, listDataChildPlantList)
+        expandableListViewPlantList.setAdapter(listAdapterPlantList)
+        listAdapterPlantList.notifyDataSetChanged()
     }
 
     private fun setupExpandableListViews() {

@@ -45,7 +45,7 @@ data class UserRegistrationInfo(
     @SerializedName("os") val os: String,
     @SerializedName("app_ver") val appVer: String,
     @SerializedName("device_token") val devicetoken: String,
-    @SerializedName("app_name")val appName: String
+    @SerializedName("app_type")val appName: String
 )
 
 data class UpdateUserInfo(
@@ -54,7 +54,7 @@ data class UpdateUserInfo(
     @SerializedName("os") val os: String,
     @SerializedName("app_ver") val appVer: String,
     @SerializedName("device_token") val devicetoken: String,
-    @SerializedName("app_name")val appName: String
+    @SerializedName("app_type")val appName: String
 )
 
 data class UserInfo(

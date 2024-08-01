@@ -127,7 +127,7 @@ class AppMessagingService : FirebaseMessagingService() {
         val isPushEnabled = if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "Y" else "N"
         val os = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) "AOS" else "IOS"
         val appVer = BuildConfig.VERSION_NAME
-        val appName = "inspection"
+        val appName = "WatchQ"
 
         val registrationInfo = UserRegistrationInfo(userSeq, isPushEnabled, os, appVer, deviceToken, appName)
 
@@ -162,7 +162,7 @@ class AppMessagingService : FirebaseMessagingService() {
         val isPushEnabled = if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "Y" else "N"
         val os = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) "AOS" else "IOS"
         val appVer = BuildConfig.VERSION_NAME
-         val appName = "inspection"
+         val appName = "WatchQ"
 
         val updateUserInfo = UpdateUserInfo(userSeq, isPushEnabled, os, appVer, deviceToken, appName)
 
@@ -191,7 +191,7 @@ class AppMessagingService : FirebaseMessagingService() {
         val tokenManager = TokenManager(context)
         val userSeq = tokenManager.getUserseq() ?: ""
         val apiService = RetrofitInstance.createApi(context)
-        val appName = "inspection"
+        val appName = "WatchQ"
 
         apiService.selectUserInfo(userSeq, appName).enqueue(object : Callback<UserInfo> {
             override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>) {
@@ -206,6 +206,12 @@ class AppMessagingService : FirebaseMessagingService() {
                     val plantList = userInfo.plant_list
                     if (plantList != null) {
                         tokenManager.savePlantList(plantList)
+                        // plant_list 저장 후 prepareListData 호출
+                        if (context is MainActivity) {
+                            context.runOnUiThread {
+                                context.prepareListData()
+                            }
+                        }
                     }
 
                     val isAppVersion = userInfo.is_app_version

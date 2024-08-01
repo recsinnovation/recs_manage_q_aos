@@ -206,7 +206,6 @@ class LoginActivity : AppCompatActivity() {
                         checkPermissions()
                         tokenManager.saveToken(it.token, it.user_seq, it.plant_info.plant_seq, it.plant_info.plant_name, it.user_id)
                     }
-
                 }
                 is Result.Error -> {
                     showLoginFailedDialog()
@@ -214,6 +213,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun showLoginFailedDialog() {
         // Capture the current screen to blur
