@@ -84,5 +84,6 @@ data class Alarm(
 
 data class ReadMessage(
     @SerializedName("user_seq") val userSeq: String,
-    @SerializedName("app_alarm_seq") val alarmSeq: String
+    @SerializedName("app_alarm_seq") val alarmSeq: String,
+    @SerializedName("app_type")val appName: String
 )

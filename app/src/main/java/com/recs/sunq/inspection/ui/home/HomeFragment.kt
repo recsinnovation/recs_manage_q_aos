@@ -129,7 +129,9 @@ class HomeFragment : Fragment(), UrlHandler {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     println("Page finished: $url")
-                    binding.webView.evaluateJavascript("injectSessionData();") {
+
+                    // binding이 null이 아닌 경우에만 작업 수행
+                    _binding?.webView?.evaluateJavascript("injectSessionData();") {
                         println("Injected session data.")
                     }
                     swipeRefreshLayout.isRefreshing = false

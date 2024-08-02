@@ -214,7 +214,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showLoginFailedDialog() {
         // Capture the current screen to blur
         val rootView = window.decorView.rootView

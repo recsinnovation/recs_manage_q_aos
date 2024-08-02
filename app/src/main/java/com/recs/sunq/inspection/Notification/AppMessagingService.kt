@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -40,6 +41,9 @@ class AppMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             showNotification(remoteMessage.data)
         }
+
+        val intent = Intent("com.example.app.ACTION_REFRESH_ALARM_LIST")
+        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
 
     private fun showNotification(data: Map<String, String>) {
@@ -162,7 +166,7 @@ class AppMessagingService : FirebaseMessagingService() {
         val isPushEnabled = if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "Y" else "N"
         val os = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) "AOS" else "IOS"
         val appVer = BuildConfig.VERSION_NAME
-         val appName = "WatchQ"
+        val appName = "WatchQ"
 
         val updateUserInfo = UpdateUserInfo(userSeq, isPushEnabled, os, appVer, deviceToken, appName)
 

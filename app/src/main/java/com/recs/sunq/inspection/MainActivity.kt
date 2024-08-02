@@ -107,6 +107,8 @@ class MainActivity : AppCompatActivity() {
 
         val appMessagingService = AppMessagingService()
         appMessagingService.selectUserInfo(this)
+
+        handleIntent(intent)
     }
 
     private fun setupNavigationListeners(
@@ -142,8 +144,7 @@ class MainActivity : AppCompatActivity() {
             currentFragment.updateUrl(newUrl)
         } else {
             Log.e(
-                "MainActivity",
-                "Current fragment does not implement UrlHandler: ${currentFragment?.javaClass?.simpleName}"
+                "MainActivity", "Current fragment does not implement UrlHandler: ${currentFragment?.javaClass?.simpleName}"
             )
         }
     }
@@ -187,6 +188,24 @@ class MainActivity : AppCompatActivity() {
 
             // 다이얼로그 표시
             dialog.show()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.d("MainActivity", "onNewIntent navigateTo: ${intent?.getStringExtra("navigateTo")}")
+        intent?.let {
+            handleIntent(it)
+        }
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        intent?.getStringExtra("navigateTo")?.let { navigateTo ->
+            Log.d("MainActivity", "handleIntent navigateTo: $navigateTo")
+            if (navigateTo == "AlarmFragment") {
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.nav_alarmList)
+            }
         }
     }
 

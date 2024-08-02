@@ -36,7 +36,7 @@ interface LoginService {
     fun selectUserInfo(@Query("user_seq") userSeq: String, @Query("app_type") appName: String): Call<UserInfo>
 
     @GET("userAppAlarm/userAllAlarm")
-    fun selectAlertList(@Query("user_seq") userSeq: String): Call<List<Alarm>>
+    fun selectAlertList(@Query("user_seq") userSeq: String, @Query("app_type") appName: String): Call<List<Alarm>>
 
     @POST("userAppAlarm/userRead")
     fun ReadAlert(@Body readMessage: ReadMessage): Call<Void>

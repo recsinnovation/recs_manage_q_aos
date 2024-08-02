@@ -97,7 +97,7 @@ class SplashView : AppCompatActivity() {
                         val plantName = loginResponse.data?.plant_info?.plant_name
 
                         if (token != null && userSeq != null && plantSeq != null && plantName != null && userID != null) {
-                                tokenManager.saveToken(token, userSeq, plantSeq, plantName, userID)
+                            tokenManager.saveToken(token, userSeq, plantSeq, plantName, userID)
 
                             val appMessagingService = AppMessagingService()
                             CoroutineScope(Dispatchers.Main).launch {
