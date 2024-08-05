@@ -5,6 +5,17 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile =
+                file("C:\\Users\\guswn\\AndroidStudioProjects\\inspection\\keystore\\release-key.jks")
+            storePassword = "min0324yg!"
+            keyPassword = "min0324yg!"
+            keyAlias = "WatchQ"
+        }
+    }
+
+
     namespace = "com.recs.sunq.inspection"
     compileSdk = 34
 
@@ -16,6 +27,7 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig = signingConfigs.getByName("release")
     }
 
     buildTypes {

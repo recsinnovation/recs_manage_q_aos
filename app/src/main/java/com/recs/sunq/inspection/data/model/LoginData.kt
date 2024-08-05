@@ -64,7 +64,7 @@ data class UserInfo(
     var os : String,
     var is_push : String,
     var latest_app_ver : String,
-    var is_app_version : Boolean,
+    var is_latest_app_ver : Boolean,
     val plant_list: List<Plant_list>?,
     val plant_seq: String
 )

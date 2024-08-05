@@ -218,8 +218,8 @@ class AppMessagingService : FirebaseMessagingService() {
                         }
                     }
 
-                    val isAppVersion = userInfo.is_app_version
-                    Log.d("FCM", "is_app_version: $isAppVersion")
+                    val isAppVersion = userInfo.is_latest_app_ver
+                    Log.d("FCM", "is_latest_app_ver: $isAppVersion")
                     if (context is MainActivity) {
                         Log.d("FCM", "context is MainActivity")
                         if (!context.isFinishing) {
